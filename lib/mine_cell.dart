@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:minesweeper/mine_cell_type.dart';
 
 class MineCell extends StatefulWidget {
   final double size;
@@ -56,54 +57,3 @@ class _MineCellState extends State<MineCell> {
   }
 }
 
-enum MineCellType {
-  one,
-  two,
-  three,
-  four,
-  five,
-  six,
-  seven,
-  eight,
-  empty,
-  bomb,
-  unrevealed,
-  flagged,
-}
-
-extension MineCellTypeExtension on MineCellType {
-
-  Image get image {
-    switch (this) {
-      case MineCellType.one:
-        return Image.asset('images/1.png');
-      case MineCellType.two:
-        return Image.asset('images/2.png');
-      case MineCellType.three:
-        return Image.asset('images/3.png');
-      case MineCellType.four:
-        return Image.asset('images/4.png');
-      case MineCellType.five:
-        return Image.asset('images/5.png');
-      case MineCellType.six:
-        return Image.asset('images/6.png');
-      case MineCellType.seven:
-        return Image.asset('images/7.png');
-      case MineCellType.eight:
-        return Image.asset('images/8.png');
-
-      case MineCellType.bomb:
-        return Image.asset('images/bomb.png');
-      case MineCellType.empty:
-        return Image.asset('images/empty.png');
-
-      case MineCellType.flagged:
-        return Image.asset('images/flagged.png');
-      case MineCellType.unrevealed:
-        return Image.asset('images/unrevealed.png');
-
-      default:
-        return null;
-    }
-  }
-}
