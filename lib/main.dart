@@ -15,17 +15,7 @@ class App extends StatelessWidget {
           primarySwatch: Colors.grey,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home: AppBackground());
-  }
-}
-
-class AppBackground extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Colors.grey,
-      child: MinesweeperBoard(),
-    );
+        home: MinesweeperBoard());
   }
 }
 
@@ -36,15 +26,21 @@ class MinesweeperBoard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.centerRight,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          MineCell(size: 30, type: MineCellType.bomb),
-          MineCell(size: 30, type: MineCellType.unrevealed),
-          MineCell(size: 30, type: MineCellType.one),
-        ],
+    return Container(
+      color: Colors.grey,
+      child: Align(
+        alignment: Alignment.centerRight,
+        child: Container(
+          color: Colors.white,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              MineCell(size: 30, type: MineCellType.bomb),
+              MineCell(size: 30, type: MineCellType.two),
+              MineCell(size: 30, type: MineCellType.one),
+            ],
+          ),
+        ),
       ),
     );
   }
