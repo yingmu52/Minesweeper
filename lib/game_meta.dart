@@ -78,7 +78,7 @@ class GameMeta {
             type: data[i][j].type,
             isRevealed: true,
             isFlagged: false,
-            backgroundColor: (i == m && j == n) ? Colors.red : Colors.grey,
+            color: (i == m && j == n) ? Colors.red : Colors.grey,
           );
         }
       }
