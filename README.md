@@ -1,6 +1,7 @@
 # minesweeper
 
-A new Flutter project.
+<img src="./gif/screen_capture.gif" alt="drawing" width="300"/>
+
 
 ## Getting Started
 
