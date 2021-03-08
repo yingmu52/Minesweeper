@@ -16,6 +16,7 @@ enum MineCellType {
 }
 
 extension MineCellTypeExtension on MineCellType {
+
   MineCellType getType(int number) {
     switch (number) {
       case 1:
@@ -70,6 +71,22 @@ extension MineCellTypeExtension on MineCellType {
 
       default:
         return null;
+    }
+  }
+
+  bool get isNumber {
+    switch (this) {
+      case MineCellType.one:
+      case MineCellType.two:
+      case MineCellType.three:
+      case MineCellType.four:
+      case MineCellType.five:
+      case MineCellType.six:
+      case MineCellType.seven:
+      case MineCellType.eight:
+        return true;
+    default:
+      return false;
     }
   }
 }

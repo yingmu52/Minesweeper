@@ -3,7 +3,7 @@ import 'package:minesweeper/mine_cell_type.dart';
 
 class MineCell extends StatefulWidget {
   final double size;
-  final MineCellType type;
+  MineCellType type;
   bool isRevealed;
   bool isFlagged;
 
