@@ -135,4 +135,17 @@ class GameMeta {
       clickOn(i, j + 1);
     }
   }
+
+  void flag(int i, int j) {
+    var currentCell = data[i][j];
+
+    if (isGameOver || currentCell.isFlagged) return;
+
+    data[i][j] = MineCell(
+      size: cellSize,
+      type: currentCell.type,
+      isRevealed: false,
+      isFlagged: true,
+    );
+  }
 }

@@ -69,10 +69,15 @@ class _MineFieldState extends State<MineField> {
                 children: [
                   for (var j = 0; j < data[i].length; j++)
                     GestureDetector(
-                      onTap: () => {
+                      onLongPress: () {
+                        setState(() {
+                          widget.gameMeta.flag(i, j);
+                        });
+                      },
+                      onTap: () {
                         setState(() {
                           widget.gameMeta.clickOn(i, j);
-                        })
+                        });
                       },
                       child: data[i][j],
                     )
