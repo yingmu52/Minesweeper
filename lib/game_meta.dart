@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/material.dart';
 import 'package:minesweeper/mine_cell.dart';
 
 import 'mine_cell_type.dart';
@@ -8,23 +9,22 @@ class GameMeta {
   double width;
   double height;
   double cellSize;
-  double probabilityOfGettingBomb;
 
+  double probabilityOfGettingBomb = 0.1;
   List<List<MineCell>> data;
+  bool isGameOver = false;
 
   GameMeta({
     this.width = 100,
     this.height = 100,
     this.cellSize = 30,
-    this.probabilityOfGettingBomb = 0.1,
   }) {
     data = List.generate(
-        _numberOfColumn, (i) => List.generate(_numberOfRow, _getRandom),
-        growable: false);
-    _addMineIndicators(data);
+        _numberOfColumn, (i) => List.generate(_numberOfRow, _getRandom));
+    reset();
   }
 
-  void _addMineIndicators(List<List<MineCell>> data) {
+  void reset() {
     for (var i = 0; i < data.length; i++) {
       for (var j = 0; j < data[i].length; j++) {
         var directions = [
@@ -39,8 +39,7 @@ class GameMeta {
         ];
         var bombCount = 0;
         for (var direction in directions) {
-          var m = direction.first,
-              n = direction.last;
+          var m = direction.first, n = direction.last;
           if (i + m >= 0 &&
               i + m < data.length &&
               j + n >= 0 &&
@@ -50,16 +49,39 @@ class GameMeta {
             }
           }
         }
-        if (data[i][j].type != MineCellType.bomb) {
-          var currentCell = data[i][j];
-          data[i][j] = MineCell(size: cellSize,
-              type: currentCell.type.getType(bombCount),
-              isRevealed: currentCell.isRevealed,
-              isFlagged: currentCell.isFlagged
+
+        var currentCell = data[i][j];
+        var type = currentCell.type == MineCellType.bomb
+            ? currentCell.type
+            : currentCell.type.getType(bombCount);
+
+        data[i][j] = MineCell(
+          size: cellSize,
+          type: type,
+          isRevealed: false,
+          isFlagged: false,
+        );
+      }
+    }
+  }
+
+  void showAllBombsAndHighlight(int m, int n) {
+    for (var i = 0; i < data.length; i++) {
+      for (var j = 0; j < data[i].length; j++) {
+        var currentCell = data[i][j];
+        if (currentCell.type == MineCellType.bomb) {
+          data[i][j] = MineCell(
+            size: cellSize,
+            type: data[i][j].type,
+            isRevealed: true,
+            isFlagged: false,
+            backgroundColor: (i==m && j==n) ? Colors.red: Colors.grey,
           );
         }
       }
     }
+
+    isGameOver = true;
   }
 
   MineCell _getRandom(int index) {
@@ -76,5 +98,41 @@ class GameMeta {
 
   int get _numberOfRow {
     return width ~/ cellSize;
+  }
+
+  void clickOn(int i, int j) {
+    if (isGameOver) {
+      isGameOver = false;
+      reset();
+      return;
+    }
+
+    if (i < 0 || i > data.length - 1 || j < 0 || j > data[i].length - 1) {
+      return;
+    }
+
+    var currentCell = data[i][j];
+    if (currentCell.isRevealed) {
+      return;
+    }
+
+    // update cell and click recursively
+    data[i][j] = MineCell(
+      size: currentCell.size,
+      type: currentCell.type,
+      isRevealed: true,
+    );
+
+    if (currentCell.type == MineCellType.bomb) {
+      showAllBombsAndHighlight(i, j);
+      return;
+    }
+
+    if (data[i][j].type == MineCellType.empty) {
+      clickOn(i - 1, j);
+      clickOn(i + 1, j);
+      clickOn(i, j - 1);
+      clickOn(i, j + 1);
+    }
   }
 }

@@ -6,14 +6,16 @@ class MineCell extends StatelessWidget {
   final MineCellType type;
   final bool isRevealed;
   final bool isFlagged;
+  final Color backgroundColor;
 
-  const MineCell(
-      {Key key,
-      this.size,
-      this.type,
-      this.isRevealed = false,
-      this.isFlagged = false})
-      : super(key: key);
+  const MineCell({
+    Key key,
+    this.size,
+    this.type,
+    this.isRevealed = false,
+    this.isFlagged = false,
+    this.backgroundColor = Colors.grey,
+  }) : super(key: key);
 
   Image get currentImage {
     return isRevealed
@@ -26,6 +28,7 @@ class MineCell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      color: backgroundColor,
       width: size,
       height: size,
       child: currentImage,

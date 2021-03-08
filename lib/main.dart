@@ -71,44 +71,12 @@ class _MineFieldState extends State<MineField> {
                     GestureDetector(
                       onTap: () => {
                         setState(() {
-                          _clickOn(i, j);
+                          widget.gameMeta.clickOn(i, j);
                         })
                       },
                       child: data[i][j],
                     )
                 ])
         ]);
-  }
-
-  void _clickOn(int i, int j) {
-    var data = widget.gameMeta.data;
-
-    if (i < 0 || i > data.length - 1 || j < 0 || j > data[i].length - 1) {
-      return;
-    }
-
-    var currentCell = data[i][j];
-    if (currentCell.isRevealed) {
-      return;
-    }
-
-    if (currentCell.type == MineCellType.bomb) {
-      // TODO: game over
-      return;
-    }
-
-    // update cell and click recursively
-    data[i][j] = MineCell(
-      size: currentCell.size,
-      type: currentCell.type,
-      isRevealed: true,
-    );
-
-    if (data[i][j].type == MineCellType.empty) {
-      _clickOn(i - 1, j);
-      _clickOn(i + 1, j);
-      _clickOn(i, j - 1);
-      _clickOn(i, j + 1);
-    }
   }
 }
