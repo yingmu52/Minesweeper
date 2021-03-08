@@ -1,8 +1,6 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:minesweeper/mine_cell.dart';
-
 import 'mine_cell_type.dart';
 
 class GameMeta {
@@ -19,12 +17,17 @@ class GameMeta {
     this.height = 100,
     this.cellSize = 30,
   }) {
-    data = List.generate(
-        _numberOfColumn, (i) => List.generate(_numberOfRow, _getRandom));
     reset();
   }
 
   void reset() {
+    data = List.generate(
+        _numberOfColumn,
+        (i) => List.generate(
+            _numberOfRow,
+            (j) => MineCell(
+                size: cellSize, type: randomType(probabilityOfGettingBomb))));
+
     for (var i = 0; i < data.length; i++) {
       for (var j = 0; j < data[i].length; j++) {
         var directions = [
@@ -53,7 +56,7 @@ class GameMeta {
         var currentCell = data[i][j];
         var type = currentCell.type == MineCellType.bomb
             ? currentCell.type
-            : currentCell.type.getType(bombCount);
+            : typeOf(bombCount);
 
         data[i][j] = MineCell(
           size: cellSize,
@@ -75,21 +78,11 @@ class GameMeta {
             type: data[i][j].type,
             isRevealed: true,
             isFlagged: false,
-            backgroundColor: (i==m && j==n) ? Colors.red: Colors.grey,
+            backgroundColor: (i == m && j == n) ? Colors.red : Colors.grey,
           );
         }
       }
     }
-
-    isGameOver = true;
-  }
-
-  MineCell _getRandom(int index) {
-    var randomNumber = Random().nextInt(100) / 100.0;
-    MineCellType type = randomNumber <= probabilityOfGettingBomb
-        ? MineCellType.bomb
-        : MineCellType.empty;
-    return MineCell(size: cellSize, type: type);
   }
 
   int get _numberOfColumn {
@@ -101,16 +94,19 @@ class GameMeta {
   }
 
   void clickOn(int i, int j) {
+    // game over
     if (isGameOver) {
       isGameOver = false;
       reset();
       return;
     }
 
+    // index of out bound
     if (i < 0 || i > data.length - 1 || j < 0 || j > data[i].length - 1) {
       return;
     }
 
+    // should not click on cell that is already revealed
     var currentCell = data[i][j];
     if (currentCell.isRevealed) {
       return;
@@ -123,11 +119,16 @@ class GameMeta {
       isRevealed: true,
     );
 
+    calculateFlaggedBombs();
+
+    // step on the bomb, and the game should be over
     if (currentCell.type == MineCellType.bomb) {
       showAllBombsAndHighlight(i, j);
+      isGameOver = true;
       return;
     }
 
+    // trigger recursive call on empty cell
     if (data[i][j].type == MineCellType.empty) {
       clickOn(i - 1, j);
       clickOn(i + 1, j);
@@ -147,5 +148,26 @@ class GameMeta {
       isRevealed: false,
       isFlagged: true,
     );
+
+    calculateFlaggedBombs();
+  }
+
+  void calculateFlaggedBombs() {
+    var totalBombs = 0, flaggedBombs = 0;
+    for (var cells in data) {
+      for (var cell in cells) {
+        if (cell.type == MineCellType.bomb) {
+          totalBombs += 1;
+          if (cell.isFlagged) {
+            flaggedBombs += 1;
+          }
+        }
+      }
+    }
+    print("total: $totalBombs flagged: $flaggedBombs");
+    if (totalBombs == flaggedBombs) {
+      isGameOver = false;
+      reset();
+    }
   }
 }

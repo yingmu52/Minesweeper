@@ -8,14 +8,13 @@ class MineCell extends StatelessWidget {
   final bool isFlagged;
   final Color backgroundColor;
 
-  const MineCell({
-    Key key,
+  MineCell({
     this.size,
     this.type,
     this.isRevealed = false,
     this.isFlagged = false,
     this.backgroundColor = Colors.grey,
-  }) : super(key: key);
+  });
 
   Image get currentImage {
     return isRevealed

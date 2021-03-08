@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 enum MineCellType {
@@ -16,29 +18,6 @@ enum MineCellType {
 }
 
 extension MineCellTypeExtension on MineCellType {
-
-  MineCellType getType(int number) {
-    switch (number) {
-      case 1:
-        return MineCellType.one;
-      case 2:
-        return MineCellType.two;
-      case 3:
-        return MineCellType.three;
-      case 4:
-        return MineCellType.four;
-      case 5:
-        return MineCellType.five;
-      case 6:
-        return MineCellType.six;
-      case 7:
-        return MineCellType.seven;
-      case 8:
-        return MineCellType.eight;
-      default:
-        return MineCellType.empty;
-    }
-  }
 
   Image get image {
     switch (this) {
@@ -73,20 +52,34 @@ extension MineCellTypeExtension on MineCellType {
         return null;
     }
   }
+}
 
-  bool get isNumber {
-    switch (this) {
-      case MineCellType.one:
-      case MineCellType.two:
-      case MineCellType.three:
-      case MineCellType.four:
-      case MineCellType.five:
-      case MineCellType.six:
-      case MineCellType.seven:
-      case MineCellType.eight:
-        return true;
+MineCellType typeOf(int number) {
+  switch (number) {
+    case 1:
+      return MineCellType.one;
+    case 2:
+      return MineCellType.two;
+    case 3:
+      return MineCellType.three;
+    case 4:
+      return MineCellType.four;
+    case 5:
+      return MineCellType.five;
+    case 6:
+      return MineCellType.six;
+    case 7:
+      return MineCellType.seven;
+    case 8:
+      return MineCellType.eight;
     default:
-      return false;
-    }
+      return MineCellType.empty;
   }
+}
+
+MineCellType randomType(double probabilityOfGettingBomb) {
+  var randomNumber = Random().nextInt(100) / 100.0;
+  return randomNumber <= probabilityOfGettingBomb
+      ? MineCellType.bomb
+      : MineCellType.empty;
 }
